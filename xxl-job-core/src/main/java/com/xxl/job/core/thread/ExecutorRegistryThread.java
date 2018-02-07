@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 /**
  * Created by xuxueli on 17/3/2.
  */
@@ -24,7 +26,8 @@ public class ExecutorRegistryThread extends Thread {
 
     private Thread registryThread;
     private volatile boolean toStop = false;
-    public void start(final int port, final String ip, final String appName){
+
+    public void start(final int port, final String ip, final String appName, String registryHost){
 
         // valid
         if (appName==null || appName.trim().length()==0) {
@@ -38,10 +41,14 @@ public class ExecutorRegistryThread extends Thread {
 
         // executor address (generate addredd = ip:port)
         final String executorAddress;
-        if (ip != null && ip.trim().length()>0) {
-            executorAddress = ip.trim().concat(":").concat(String.valueOf(port));
-        } else {
-            executorAddress = IpUtil.getIpPort(port);
+        if (!isEmpty(registryHost)){
+            executorAddress = registryHost;
+        }else {
+            if (ip != null && ip.trim().length()>0) {
+                executorAddress = ip.trim().concat(":").concat(String.valueOf(port));
+            } else {
+                executorAddress = IpUtil.getIpPort(port);
+            }
         }
 
         registryThread = new Thread(new Runnable() {

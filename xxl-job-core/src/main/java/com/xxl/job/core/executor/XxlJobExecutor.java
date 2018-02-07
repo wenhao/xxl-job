@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 /**
  * Created by xuxueli on 2016/3/2 21:14.
  */
@@ -36,6 +38,7 @@ public class XxlJobExecutor implements ApplicationContextAware {
     private String accessToken;
     private String logPath;
     private int logRetentionDays;
+    private String registryHost;
 
     public void setAdminAddresses(String adminAddresses) {
         this.adminAddresses = adminAddresses;
@@ -57,6 +60,10 @@ public class XxlJobExecutor implements ApplicationContextAware {
     }
     public void setLogRetentionDays(int logRetentionDays) {
         this.logRetentionDays = logRetentionDays;
+    }
+
+    public void setRegistryHost(String registryHost) {
+        this.registryHost = registryHost;
     }
 
     // ---------------------- applicationContext ----------------------
@@ -82,11 +89,19 @@ public class XxlJobExecutor implements ApplicationContextAware {
         XxlJobFileAppender.initLogPath(logPath);
 
         // init executor-server
-        initExecutorServer(port, ip, appName, accessToken);
+
+        if(!isEmpty(registryHost)) {
+            initExecutorServer(port, ip, appName, accessToken, registryHost);
+        } else {
+            initExecutorServer(port, ip, appName, accessToken);
+        }
 
         // init JobLogFileCleanThread
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
     }
+
+
+
     public void destroy(){
         // destory JobThreadRepository
         if (JobThreadRepository.size() > 0) {
@@ -136,6 +151,14 @@ public class XxlJobExecutor implements ApplicationContextAware {
         NetComServerFactory.setAccessToken(accessToken);
         serverFactory.start(port, ip, appName); // jetty + registry
     }
+
+    private void initExecutorServer(int port, String ip, String appName, String accessToken, String registryHost)
+            throws Exception  {
+        NetComServerFactory.putService(ExecutorBiz.class, new ExecutorBizImpl());
+        NetComServerFactory.setAccessToken(accessToken);
+        serverFactory.start(port, ip, appName, registryHost);
+    }
+
     private void stopExecutorServer() {
         serverFactory.destroy();    // jetty + registry + callback
     }
