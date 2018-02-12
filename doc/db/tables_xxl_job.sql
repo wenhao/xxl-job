@@ -1,7 +1,6 @@
-CREATE database if NOT EXISTS `xxljob` default character set utf8 collate utf8_general_ci;
 use `xxljob`;
 
-
+ALTER DATABASE `xxljob` CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 CREATE TABLE XXL_JOB_QRTZ_JOB_DETAILS
   (

@@ -1,0 +1,146 @@
+kind: Template
+apiVersion: "v1"
+metadata:
+  name: "xxl-job-admin"
+  annotations:
+    openshift.io/display-name: "xxl-job-admin"
+    openshift.io/long-description: "This template provides a standalone xxl-job-admin."
+    openshift.io/provider-display-name: "Wen Hao."
+    openshift.io/support-url: "https://wenhao.github.io"
+    description: "xxl-job-admin"
+    tags: "mysql,xxl-job-admin,database"
+    iconClass: "fa-clock-o"
+message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${xxl-job-admin_SERVICE_NAME}\n\n    Username: ${MYSQL_USER}\n    Password: ${MYSQL_PASSWORD}\n    Connection URL: mysql://${MYSQL_SERVICE_NAME}:3306/\n\n"
+labels:
+  template: "xxl-job-admin"
+objects:
+  - kind: DeploymentConfig
+    apiVersion: "v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-admin"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-admin"
+    spec:
+      replicas: 1
+      selector:
+        app: "${SERVICE_NAME}-xxl-job-admin"
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - xxl-job-admin
+            from:
+              kind: "ImageStreamTag"
+              name: "xxl-job-admin:${VERSION}"
+              namespace: "${NAMESPACE}"
+        - type: "ConfigChange"
+      template:
+        metadata:
+          labels:
+            app: "${SERVICE_NAME}-xxl-job-admin"
+        spec:
+          containers:
+            - name: "xxl-job-admin"
+              image: " "
+              imagePullPolicy: "IfNotPresent"
+              readinessProbe:
+                timeoutSeconds: 3
+                initialDelaySeconds: 3
+                httpGet:
+                  path: "/login.html"
+                  port: 8080
+              livenessProbe:
+                timeoutSeconds: 3
+                initialDelaySeconds: 20
+                failureThreshold: 30
+                httpGet:
+                  path: "/login.html"
+                  port: 8080
+              env:
+                - name: xxl.job.db.url
+                  value: "${DATABASE_URL}"
+                - name: xxl.job.db.user
+                  value: "${DATABASE_USER}"
+                - name: xxl.job.db.password
+                  value: "${DATABASE_PASSWORD}"
+              resources:
+                requests:
+                  memory: "512Mi"
+                limits:
+                  memory: "${MEMORY_LIMIT}"
+              terminationMessagePath: "/dev/termination-log"
+              securityContext:
+                privileged: false
+          restartPolicy: "Always"
+          dnsPolicy: "ClusterFirst"
+  - kind: Service
+    apiVersion: "v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-admin"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-admin"
+      annotations:
+        service.openshift.io/infrastructure: "true"
+    spec:
+      ports:
+        - name: "xxl-job-admin"
+          protocol: "TCP"
+          port: 80
+          targetPort: 8080
+      selector:
+        app: "${SERVICE_NAME}-xxl-job-admin"
+      type: "ClusterIP"
+    sessionAffinity: "None"
+  - kind: Route
+    apiVersion: "v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-admin"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-admin"
+      annotations:
+        template.openshift.io/expose-uri: "http://{.spec.host}{.spec.path}"
+    spec:
+      to:
+        kind: Service
+        name: "${SERVICE_NAME}-xxl-job-admin"
+parameters:
+  - name: NAMESPACE
+    displayName: Namespace
+    description: "The OpenShift Namespace where the ImageStream resides."
+    value: openshift
+  - name: SERVICE_NAME
+    displayName: "xxl-job-admin Service Name"
+    description: "The name of the OpenShift Service exposed for the xxl-job-admin, pre-set a suffix '-xxl-job-admin'."
+    generate: expression
+    from: "user[A-Z0-9]{3}"
+    required: true
+  - name: VERSION
+    displayName: "Version of xxl-job-admin Image"
+    description: "Version of xxl-job-admin image to be used (1.9.1, or latest)."
+    value: "1.9.1"
+    required: true
+  - name: MEMORY_LIMIT
+    displayName: "xxl-job-admin Memory Limit"
+    description: "Maximum amount of memory the container can use."
+    value: 512Mi
+    required: true
+  - name: DATABASE_URL
+    displayName: "MySQL URL"
+    description: "URL for the MySQL connection."
+    value: mysql
+    required: true
+  - name: DATABASE_USER
+    displayName: "MySQL Connection Username"
+    description: "Username for MySQL user that will be used for accessing the database."
+    generate: expression
+    from: "user[A-Z0-9]{3}"
+    required: true
+  - name: DATABASE_PASSWORD
+    displayName: "MySQL Connection Password"
+    description: "Password for the MySQL connection user."
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
+    required: true
