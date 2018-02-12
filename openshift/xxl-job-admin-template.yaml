@@ -60,11 +60,11 @@ objects:
                   path: "/login.html"
                   port: 8080
               env:
-                - name: xxl.job.db.url
+                - name: DATABASE_URL
                   value: "${DATABASE_URL}"
-                - name: xxl.job.db.user
+                - name: DATABASE_USER
                   value: "${DATABASE_USER}"
-                - name: xxl.job.db.password
+                - name: DATABASE_PASSWORD
                   value: "${DATABASE_PASSWORD}"
               resources:
                 requests:

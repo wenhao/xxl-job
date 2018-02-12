@@ -185,9 +185,9 @@ The concrete contet describe as follows:
 
     ### JDBC connection info of schedule center：keep Consistent with chapter 2.1
     xxl.job.db.driverClass=com.mysql.jdbc.Driver
-    xxl.job.db.url=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
-    xxl.job.db.user=root
-    xxl.job.db.password=root_pwd
+    DATABASE_URL=jdbc:mysql://localhost:3306/xxl-job?useUnicode=true&characterEncoding=UTF-8
+    DATABASE_USER=root
+    DATABASE_PASSWORD=root_pwd
     
     ### Alarm mailbox
     xxl.job.mail.host=smtp.163.com
