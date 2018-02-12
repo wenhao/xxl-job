@@ -10,6 +10,7 @@
 	
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="fileEncoding" value="utf-8" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_NEVER" />
 		<property name="locations">
 			<list>
 				<value>classpath*:xxl-job-admin.properties</value>
