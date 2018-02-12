@@ -10,7 +10,7 @@ metadata:
     description: "xxl-job-admin"
     tags: "mysql,xxl-job-admin,database"
     iconClass: "fa-clock-o"
-message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${xxl-job-admin_SERVICE_NAME}\n\n    Username: ${MYSQL_USER}\n    Password: ${MYSQL_PASSWORD}\n    Connection URL: mysql://${MYSQL_SERVICE_NAME}:3306/\n\n"
+message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${SERVICE_NAME}\n\n    Username: ${DATABASE_USER}\n    Password: ${DATABASE_PASSWORD}\n    Connection URL: http://${SERVICE_NAME}/\n\n"
 labels:
   template: "xxl-job-admin"
 objects:
