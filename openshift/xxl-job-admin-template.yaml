@@ -9,7 +9,7 @@ metadata:
     openshift.io/support-url: "https://wenhao.github.io"
     description: "xxl-job-admin"
     tags: "xxl-job-admin,xxl-job,admin"
-    iconClass: "fa-clock-o"
+    iconClass: "fa fa-cogs"
 message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${SERVICE_NAME}\n\n    Username: ${XXL_JOB_LOGIN_USERNAME}\n    Password: ${XXL_JOB_LOGIN_PASSWORD}\n    Connection URL: http://${SERVICE_NAME}/\n\n"
 labels:
   template: "xxl-job-admin"

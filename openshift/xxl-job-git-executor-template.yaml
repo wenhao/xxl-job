@@ -9,7 +9,7 @@ metadata:
     openshift.io/support-url: "https://wenhao.github.io"
     description: "xxl-job-git-executor"
     tags: "xxl-job-git-executor,xxl-job,executor"
-    iconClass: "fa-clock-o"
+    iconClass: "fa fa-cogs"
 message: "The following service(s) have been created in your project: \n\n    xxl-job-git-executor: ${SERVICE_NAME}\n\n"
 labels:
   template: "xxl-job-git-executor"
