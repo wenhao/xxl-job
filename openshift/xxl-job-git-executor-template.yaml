@@ -1,0 +1,105 @@
+kind: Template
+apiVersion: "v1"
+metadata:
+  name: "xxl-job-git-executor"
+  annotations:
+    openshift.io/display-name: "xxl-job-git-executor"
+    openshift.io/long-description: "This template provides a standalone xxl-job-git-executor."
+    openshift.io/provider-display-name: "Wen Hao."
+    openshift.io/support-url: "https://wenhao.github.io"
+    description: "xxl-job-git-executor"
+    tags: "xxl-job-git-executor,xxl-job,executor"
+    iconClass: "fa-clock-o"
+message: "The following service(s) have been created in your project: \n\n    xxl-job-git-executor: ${SERVICE_NAME}\n\n"
+labels:
+  template: "xxl-job-git-executor"
+objects:
+  - kind: DeploymentConfig
+    apiVersion: "v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-git-executor"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-git-executor"
+    spec:
+      replicas: 1
+      selector:
+        app: "${SERVICE_NAME}-xxl-job-git-executor"
+      strategy:
+        type: "Recreate"
+      triggers:
+        - type: "ImageChange"
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - xxl-job-git-executor
+            from:
+              kind: "ImageStreamTag"
+              name: "xxl-job-git-executor:${VERSION}"
+              namespace: "${NAMESPACE}"
+        - type: "ConfigChange"
+      template:
+        metadata:
+          labels:
+            app: "${SERVICE_NAME}-xxl-job-git-executor"
+        spec:
+          containers:
+            - name: "xxl-job-git-executor"
+              image: " "
+              imagePullPolicy: "IfNotPresent"
+              env:
+                - name: XXL_JOB_ADMIN_ADDRESS
+                  value: "${XXL_JOB_ADMIN_ADDRESS}"
+              resources:
+                requests:
+                  memory: "512Mi"
+                limits:
+                  memory: "${MEMORY_LIMIT}"
+              terminationMessagePath: "/dev/termination-log"
+              securityContext:
+                privileged: false
+          restartPolicy: "Always"
+          dnsPolicy: "ClusterFirst"
+  - kind: Service
+    apiVersion: "v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-git-executor"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-git-executor"
+      annotations:
+        service.openshift.io/infrastructure: "true"
+    spec:
+      ports:
+        - name: "xxl-job-git-executor"
+          protocol: "TCP"
+          port: 9999
+          targetPort: 9999
+      selector:
+        app: "${SERVICE_NAME}-xxl-job-git-executor"
+      type: "ClusterIP"
+    sessionAffinity: "None"
+parameters:
+  - name: NAMESPACE
+    displayName: Namespace
+    description: "The OpenShift Namespace where the ImageStream resides."
+    value: openshift
+  - name: SERVICE_NAME
+    displayName: "Service Name of xxl-job-git-executor"
+    description: "The name of the OpenShift Service exposed for the xxl-job-admin, pre-set a suffix '-xxl-job-git-executor'."
+    generate: expression
+    from: "user[A-Z0-9]{3}"
+    required: true
+  - name: VERSION
+    displayName: "Version of xxl-job-git-executor Image"
+    description: "Version of xxl-job-git-executor image to be used (1.9.1, or latest)."
+    value: "1.0.0"
+    required: true
+  - name: MEMORY_LIMIT
+    displayName: "Memory Limit of xxl-job-git-executor"
+    description: "Maximum amount of memory the container can use."
+    value: 512Mi
+    required: true
+  - name: XXL_JOB_ADMIN_ADDRESS
+    displayName: "xxl-job admin address list"
+    description: "xxl-job admin address list."
+    value: xxl-job-admin
+    required: true

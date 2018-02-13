@@ -8,7 +8,7 @@ metadata:
     openshift.io/provider-display-name: "Wen Hao."
     openshift.io/support-url: "https://wenhao.github.io"
     description: "xxl-job-admin"
-    tags: "mysql,xxl-job-admin,database"
+    tags: "xxl-job-admin,xxl-job,admin"
     iconClass: "fa-clock-o"
 message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${SERVICE_NAME}\n\n    Username: ${DATABASE_USER}\n    Password: ${DATABASE_PASSWORD}\n    Connection URL: http://${SERVICE_NAME}/\n\n"
 labels:

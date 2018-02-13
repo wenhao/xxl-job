@@ -10,6 +10,7 @@
     </parent>
     <artifactId>xxl-job-git-executor</artifactId>
     <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>${project.artifactId}</name>
     <description>Example executor project for spring boot.</description>
