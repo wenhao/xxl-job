@@ -5,3 +5,7 @@
 target/
 .DS_Store
 .gitattributes
+
+*.ipr
+*.iws
+*.iml
