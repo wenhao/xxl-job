@@ -1,4 +1,4 @@
-FROM tomcat:latest
+FROM openjdk:8
 
 MAINTAINER "wenhao@126.com"
 
