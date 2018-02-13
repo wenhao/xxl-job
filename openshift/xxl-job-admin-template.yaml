@@ -48,7 +48,7 @@ objects:
               imagePullPolicy: "IfNotPresent"
               readinessProbe:
                 timeoutSeconds: 3
-                initialDelaySeconds: 3
+                initialDelaySeconds: 20
                 httpGet:
                   path: "/toLogin"
                   port: 8080
