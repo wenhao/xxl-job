@@ -76,7 +76,7 @@ objects:
         apiVersion: "extensions/v1beta1"
         subresource: scale
       minReplicas: 2
-      maxReplicas: 20
+      maxReplicas: "${MAX_EXECUTORS}"
       cpuUtilization:
         targetPercentage: 80
 parameters:
@@ -94,6 +94,11 @@ parameters:
     displayName: "Version of xxl-job-git-executor Image"
     description: "Version of xxl-job-git-executor image to be used (1.9.1, or latest)."
     value: "1.0.0"
+    required: true
+  - name: MAX_EXECUTORS
+    displayName: "Maximum number of xxl-job-git-executor"
+    description: "Maximum number of xxl-job-git-executor."
+    value: "50"
     required: true
   - name: MEMORY_LIMIT
     displayName: "Memory Limit of xxl-job-git-executor"
