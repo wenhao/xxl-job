@@ -10,7 +10,7 @@ metadata:
     description: "xxl-job-admin"
     tags: "xxl-job-admin,xxl-job,admin"
     iconClass: "fa-clock-o"
-message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${SERVICE_NAME}\n\n    Username: ${DATABASE_USER}\n    Password: ${DATABASE_PASSWORD}\n    Connection URL: http://${SERVICE_NAME}/\n\n"
+message: "The following service(s) have been created in your project: \n\n    xxl-job-admin: ${SERVICE_NAME}\n\n    Username: ${XXL_JOB_LOGIN_USERNAME}\n    Password: ${XXL_JOB_LOGIN_PASSWORD}\n    Connection URL: http://${SERVICE_NAME}/\n\n"
 labels:
   template: "xxl-job-admin"
 objects:
@@ -72,6 +72,20 @@ objects:
                     secretKeyRef:
                       name: "${DATABASE_SECRET_NAME}"
                       key: "database-password"
+                - name: XXL_JOB_LOGIN_USERNAME
+                  value: "${XXL_JOB_LOGIN_USERNAME}"
+                - name: XXL_JOB_LOGIN_PASSWORD
+                  value: "${XXL_JOB_LOGIN_PASSWORD}"
+                - name: XXL_JOB_MAIL_HOST
+                  value: "${XXL_JOB_MAIL_HOST}"
+                - name: XXL_JOB_MAIL_PORT
+                  value: "${XXL_JOB_MAIL_PORT}"
+                - name: XXL_JOB_MAIL_USERNAME
+                  value: "${XXL_JOB_MAIL_USERNAME}"
+                - name: XXL_JOB_MAIL_PASSWORD
+                  value: "${XXL_JOB_MAIL_PASSWORD}"
+                - name: XXL_JOB_MAIL_SENDNICK
+                  value: "${XXL_JOB_MAIL_SENDNICK}"
               resources:
                 requests:
                   memory: "512Mi"
@@ -142,4 +156,39 @@ parameters:
     displayName: "Database Secret Name"
     description: "Secret for Database."
     value: secret
+    required: true
+  - name: XXL_JOB_LOGIN_USERNAME
+    displayName: "Login username of xxl job"
+    description: "Login username of xxl job."
+    value: admin
+    required: true
+  - name: XXL_JOB_LOGIN_PASSWORD
+    displayName: "Login password of xxl job"
+    description: "Login password of xxl job."
+    value: admin
+    required: true
+  - name: XXL_JOB_MAIL_HOST
+    displayName: "Mail Host of xxl job"
+    description: "Login password of xxl job."
+    value: smtp.163.com
+    required: true
+  - name: XXL_JOB_MAIL_PORT
+    displayName: "Mail Port of xxl job"
+    description: "Mail Port of xxl job."
+    value: "25"
+    required: true
+  - name: XXL_JOB_MAIL_USERNAME
+    displayName: "Mail Username of xxl job"
+    description: "Mail Username of xxl job."
+    value: admin
+    required: true
+  - name: XXL_JOB_MAIL_PASSWORD
+    displayName: "Mail password of xxl job"
+    description: "Mail password of xxl job."
+    value: admin
+    required: true
+  - name: XXL_JOB_MAIL_SENDNICK
+    displayName: "Mail SendNick of xxl job"
+    description: "Mail SendNick of xxl job."
+    value: "《任务调度平台XXL-JOB》"
     required: true
