@@ -49,6 +49,10 @@ objects:
               env:
                 - name: XXL_JOB_ADMIN_ADDRESS
                   value: "${XXL_JOB_ADMIN_ADDRESS}"
+                - name: XXL_JOB_EXECUTOR_APPNAME
+                  value: "${XXL_JOB_EXECUTOR_APPNAME}"
+                - name: XXL_JOB_EXECUTOR_PORT
+                  value: "${XXL_JOB_EXECUTOR_PORT}"
               resources:
                 requests:
                   memory: "512Mi"
@@ -59,24 +63,6 @@ objects:
                 privileged: false
           restartPolicy: "Always"
           dnsPolicy: "ClusterFirst"
-  - kind: Service
-    apiVersion: "v1"
-    metadata:
-      name: "${SERVICE_NAME}-xxl-job-git-executor"
-      labels:
-        app: "${SERVICE_NAME}-xxl-job-git-executor"
-      annotations:
-        service.openshift.io/infrastructure: "true"
-    spec:
-      ports:
-        - name: "xxl-job-git-executor"
-          protocol: "TCP"
-          port: 9999
-          targetPort: 9999
-      selector:
-        app: "${SERVICE_NAME}-xxl-job-git-executor"
-      type: "ClusterIP"
-    sessionAffinity: "None"
   - kind: HorizontalPodAutoscaler
     apiVersion: "autoscaling/v1"
     metadata:
@@ -127,5 +113,5 @@ parameters:
   - name: XXL_JOB_EXECUTOR_PORT
     displayName: "Port of xxl-job executor"
     description: "Port of xxl-job executor."
-    value: 9999
+    value: "9999"
     required: true
