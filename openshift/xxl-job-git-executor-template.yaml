@@ -77,6 +77,22 @@ objects:
         app: "${SERVICE_NAME}-xxl-job-git-executor"
       type: "ClusterIP"
     sessionAffinity: "None"
+  - kind: HorizontalPodAutoscaler
+    apiVersion: "autoscaling/v1"
+    metadata:
+      name: "${SERVICE_NAME}-xxl-job-git-executor"
+      labels:
+        app: "${SERVICE_NAME}-xxl-job-git-executor"
+    spec:
+      scaleTargetRef:
+        kind: "DeploymentConfig"
+        name: "${SERVICE_NAME}-xxl-job-git-executor"
+        apiVersion: "extensions/v1beta1"
+        subresource: scale
+      minReplicas: 2
+      maxReplicas: 20
+      cpuUtilization:
+        targetPercentage: 80
 parameters:
   - name: NAMESPACE
     displayName: Namespace
@@ -102,4 +118,14 @@ parameters:
     displayName: "xxl-job admin address list"
     description: "xxl-job admin address list."
     value: xxl-job-admin
+    required: true
+  - name: XXL_JOB_EXECUTOR_APPNAME
+    displayName: "Name of xxl-job executor"
+    description: "Name of xxl-job executor."
+    value: xxl-job-git-executor
+    required: true
+  - name: XXL_JOB_EXECUTOR_PORT
+    displayName: "Port of xxl-job executor"
+    description: "Port of xxl-job executor."
+    value: 9999
     required: true
