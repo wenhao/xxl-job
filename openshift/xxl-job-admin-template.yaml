@@ -50,14 +50,14 @@ objects:
                 timeoutSeconds: 3
                 initialDelaySeconds: 3
                 httpGet:
-                  path: "/login.html"
+                  path: "/toLogin"
                   port: 8080
               livenessProbe:
                 timeoutSeconds: 3
                 initialDelaySeconds: 20
-                failureThreshold: 30
+                failureThreshold: 10
                 httpGet:
-                  path: "/login.html"
+                  path: "/toLogin"
                   port: 8080
               env:
                 - name: DATABASE_URL
@@ -128,18 +128,18 @@ parameters:
     value: 512Mi
     required: true
   - name: DATABASE_URL
-    displayName: "MySQL URL"
+    displayName: "Database URL"
     description: "URL for the MySQL connection."
     value: mysql
     required: true
   - name: DATABASE_USER
-    displayName: "MySQL Connection Username"
+    displayName: "Database Connection Username"
     description: "Username for MySQL user that will be used for accessing the database."
     generate: expression
     from: "user[A-Z0-9]{3}"
     required: true
   - name: DATABASE_PASSWORD
-    displayName: "MySQL Connection Password"
+    displayName: "Database Connection Password"
     description: "Password for the MySQL connection user."
     generate: expression
     from: "[a-zA-Z0-9]{16}"
