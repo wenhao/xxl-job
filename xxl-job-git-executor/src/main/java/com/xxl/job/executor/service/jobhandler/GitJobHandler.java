@@ -20,7 +20,7 @@ public class GitJobHandler extends IJobHandler {
     public ReturnT<String> execute(String param) throws Exception {
         XxlJobLogger.log("[INFO] Execute GitJobHandler with parameters {0}.", param);
         if (!parameterValidator.validate(param)) {
-            XxlJobLogger.log("[ERROR] GitJobHandler parameters must have 3 parameters: git url, username and password.");
+            XxlJobLogger.log("[ERROR] GitJobHandler parameters must have 4 parameters: git url, branch, username and password.");
             return FAIL;
         }
         Git git = new Git(param);
