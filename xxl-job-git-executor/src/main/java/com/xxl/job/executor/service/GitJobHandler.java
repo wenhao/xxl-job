@@ -11,7 +11,7 @@ import com.xxl.job.executor.validator.ParameterValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import static java.util.Objects.isNull;
 
 @Service
 @JobHandler(value = "gitJobHandler")
@@ -42,15 +42,14 @@ public class GitJobHandler extends IJobHandler {
         Git git = new Git(param);
         String latestHash = gitService.getLatestHash(git);
 
-        Optional<GitCommit> gitCommitOptional = gitCommitRepository.findByUrlBranch(git.getUrlBranch());
-        if (!gitCommitOptional.isPresent()) {
+        GitCommit savedGitCommit = gitCommitRepository.findOne(git.getUrlBranch());
+        if (isNull(savedGitCommit)) {
             XxlJobLogger.log("[INFO] {0} latest commit hash not found, will trigger next time.", git.getUrlBranch());
             gitCommitRepository.save(new GitCommit(git.getUrlBranch(), latestHash));
             return SUCCESS;
         }
 
-        GitCommit gitCommit = gitCommitOptional.get();
-        if (gitCommit.getLatestHash().equals(latestHash)) {
+        if (savedGitCommit.getLatestHash().equals(latestHash)) {
             XxlJobLogger.log("[INFO] {0}, latest hash: {1}, no changes.", git.getUrlBranch(), latestHash);
             return SUCCESS;
         } else {
@@ -61,8 +60,8 @@ public class GitJobHandler extends IJobHandler {
             }
             XxlJobLogger.log("[INFO] {0}, latest hash: {1}, changes detected, will trigger pipeline {2} now.", git.getUrlBranch(), latestHash, git.getPipeline());
             devOpsService.trigger(git.getPipeline());
-            gitCommit.setLatestHash(latestHash);
-            gitCommitRepository.save(gitCommit);
+            savedGitCommit.setLatestHash(latestHash);
+            gitCommitRepository.save(savedGitCommit);
             return SUCCESS;
         }
     }
