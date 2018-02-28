@@ -53,6 +53,10 @@ objects:
                   value: "${XXL_JOB_EXECUTOR_APPNAME}"
                 - name: XXL_JOB_EXECUTOR_PORT
                   value: "${XXL_JOB_EXECUTOR_PORT}"
+                - name: REDIS_MASTER_HOST
+                  value: "${REDIS_MASTER_HOST}"
+                - name: REDIS_SENTINEL_HOST
+                  value: "${REDIS_SENTINEL_HOST}"
               resources:
                 requests:
                   memory: "512Mi"
@@ -119,4 +123,14 @@ parameters:
     displayName: "Port of xxl-job executor"
     description: "Port of xxl-job executor."
     value: "9999"
+    required: true
+  - name: REDIS_MASTER_HOST
+    displayName: "Host of Redis cluster"
+    description: "Host of Redis cluster."
+    value: "localhost"
+    required: true
+  - name: REDIS_SENTINEL_HOST
+    displayName: "Host of Redis sentinel"
+    description: "Host of Redis sentinel."
+    value: "localhost"
     required: true

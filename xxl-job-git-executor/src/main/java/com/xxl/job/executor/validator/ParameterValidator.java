@@ -10,6 +10,6 @@ public class ParameterValidator {
     private static final String SEPARATOR = ",";
 
     public boolean validate(String param) {
-        return !isEmpty(param) && param.split(SEPARATOR).length == 4;
+        return !isEmpty(param) && param.split(SEPARATOR).length == 5;
     }
 }

@@ -1,12 +1,12 @@
 package com.xxl.job.executor.repository;
 
-import com.xxl.job.executor.entity.GitRepository;
+import com.xxl.job.executor.entity.GitCommit;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-interface GitCommitRepository extends CrudRepository<GitRepository, String> {
+public interface GitCommitRepository extends CrudRepository<GitCommit, String> {
 
-    Optional<GitRepository> findByUrlAndBranch(String url, String branch);
+    Optional<GitCommit> findByUrlBranch(String urlBranch);
 
 }

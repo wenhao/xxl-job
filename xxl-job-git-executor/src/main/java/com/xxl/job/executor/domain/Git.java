@@ -7,6 +7,7 @@ public class Git {
     private final String branch;
     private final String username;
     private final String password;
+    private final String pipeline;
 
     public Git(String param) {
         String[] params = param.split(",");
@@ -14,6 +15,7 @@ public class Git {
         this.branch = params[1].trim();
         this.username = params[2].trim();
         this.password = URLEncoder.encode(params[3].trim());
+        this.pipeline = params[4].trim();
     }
 
     public String getUrl() {
@@ -30,6 +32,14 @@ public class Git {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getPipeline() {
+        return pipeline;
+    }
+
+    public String getUrlBranch() {
+        return String.format("%s:%s", this.url, this.branch);
     }
 
 }
