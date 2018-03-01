@@ -5,29 +5,20 @@ import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.executor.domain.Git;
-import com.xxl.job.executor.entity.GitCommit;
-import com.xxl.job.executor.repository.GitCommitRepository;
 import com.xxl.job.executor.validator.ParameterValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import static java.util.Objects.isNull;
 
 @Service
 @JobHandler(value = "gitJobHandler")
 public class GitJobHandler extends IJobHandler {
 
     private ParameterValidator parameterValidator;
-    private GitCommitRepository gitCommitRepository;
-    private GitService gitService;
     private DevOpsService devOpsService;
 
     @Autowired
-    public GitJobHandler(ParameterValidator parameterValidator, GitCommitRepository gitCommitRepository,
-                         GitService gitService, DevOpsService devOpsService) {
+    public GitJobHandler(ParameterValidator parameterValidator, DevOpsService devOpsService) {
         this.parameterValidator = parameterValidator;
-        this.gitCommitRepository = gitCommitRepository;
-        this.gitService = gitService;
         this.devOpsService = devOpsService;
     }
 
@@ -38,31 +29,6 @@ public class GitJobHandler extends IJobHandler {
             XxlJobLogger.log("[ERROR] GitJobHandler parameters must have 5 parameters: git url, branch, username, password, pipeline number.");
             return FAIL;
         }
-
-        Git git = new Git(param);
-        String latestHash = gitService.getLatestHash(git);
-
-        GitCommit savedGitCommit = gitCommitRepository.findOne(git.getUrlBranch());
-        if (isNull(savedGitCommit)) {
-            XxlJobLogger.log("[INFO] {0} latest commit hash not found, will trigger next time.", git.getUrlBranch());
-            gitCommitRepository.save(new GitCommit(git.getUrlBranch(), latestHash));
-            return SUCCESS;
-        }
-
-        if (savedGitCommit.getLatestHash().equals(latestHash)) {
-            XxlJobLogger.log("[INFO] {0}, latest hash: {1}, no changes.", git.getUrlBranch(), latestHash);
-            return SUCCESS;
-        } else {
-            boolean isPipelineRunning = devOpsService.isPipelineRunning(git.getPipeline());
-            if (isPipelineRunning) {
-                XxlJobLogger.log("[INFO] {0}, latest hash: {1}, changes detected, but pipeline {2} already running, will trigger next time.", git.getUrlBranch(), latestHash, git.getPipeline());
-                return SUCCESS;
-            }
-            XxlJobLogger.log("[INFO] {0}, latest hash: {1}, changes detected, will trigger pipeline {2} now.", git.getUrlBranch(), latestHash, git.getPipeline());
-            devOpsService.trigger(git.getPipeline());
-            savedGitCommit.setLatestHash(latestHash);
-            gitCommitRepository.save(savedGitCommit);
-            return SUCCESS;
-        }
+        return devOpsService.trigger(new Git(param)) ? SUCCESS : FAIL;
     }
 }
