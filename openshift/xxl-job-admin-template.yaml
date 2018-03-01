@@ -150,7 +150,7 @@ parameters:
   - name: DATABASE_URL
     displayName: "Database URL"
     description: "URL for the MySQL connection."
-    value: mysql
+    value: jdbc:mysql://devops-mysql.devops.svc:3306/xxljob?useUnicode=true&characterEncoding=UTF-8
     required: true
   - name: DATABASE_SECRET_NAME
     displayName: "Database Secret Name"

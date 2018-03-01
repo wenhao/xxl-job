@@ -22,9 +22,9 @@
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  destroy-method="close">
 	    <property name="driverClass" value="${xxl.job.db.driverClass}" />
-	    <property name="jdbcUrl" value="${DATABASE_URL}" />
-	    <property name="user" value="${DATABASE_USER}" />
-	    <property name="password" value="${DATABASE_PASSWORD}" />
+	    <property name="jdbcUrl" value="${xxl.job.db.url}" />
+	    <property name="user" value="${xxl.job.db.user}" />
+	    <property name="password" value="${xxl.job.db.password}" />
 	    <property name="initialPoolSize" value="3" />  
 	    <property name="minPoolSize" value="2" />  
 	    <property name="maxPoolSize" value="10" />  
