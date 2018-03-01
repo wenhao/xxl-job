@@ -27,7 +27,7 @@ public class DevOpsService {
     public boolean trigger(Git git) {
         String latestHash = gitService.getLatestHash(git);
         if (isEmpty(latestHash)) {
-            XxlJobLogger.log("[ERROR] {0}, could not get latest commit hash, git server isn't available.", git.getUrlBranch());
+            XxlJobLogger.log("[ERROR] {0}, could not get latest commit hash, git server may not available.", git.getUrlBranch());
             return false;
         }
 
