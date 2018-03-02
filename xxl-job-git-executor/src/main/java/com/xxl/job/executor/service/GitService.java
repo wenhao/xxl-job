@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class GitService {
@@ -18,15 +17,16 @@ public class GitService {
     private static final String EMPTY = "";
 
     public String getLatestHash(Git git) {
-        String url = substringAfter(git.getUrl(), "http://");
-        String command = String.format("git ls-remote http://%s:%s@%s %s | cut -f 1", git.getUsername(), git.getPassword(), url, git.getBranch());
+        String protocol = substringBefore(git.getUrl(), "://");
+        String url = substringAfter(git.getUrl(), "://");
+        String command = String.format("git ls-remote %s://%s:%s@%s %s", protocol, git.getUsername(), git.getPassword(), url, git.getBranch());
 
         CommandLine commandLine = CommandLine.parse(command);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
         ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
         Executor executor = new DefaultExecutor();
-        executor.setExitValue(1);
+        executor.setExitValue(0);
         executor.setWatchdog(watchdog);
         executor.setStreamHandler(pumpStreamHandler);
         try {
@@ -36,7 +36,7 @@ public class GitService {
             XxlJobLogger.log(e);
             return EMPTY;
         }
-        String hash = outputStream.toString();
+        String hash = substringBefore(outputStream.toString(), "\t");
         XxlJobLogger.log(hash);
         return (isNotBlank(hash) && hash.length() == GIT_HASH_SIZE) ? hash : EMPTY;
     }

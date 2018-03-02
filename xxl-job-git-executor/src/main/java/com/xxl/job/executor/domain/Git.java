@@ -13,7 +13,7 @@ public class Git {
         String[] params = param.split(",");
         this.url = params[0].trim();
         this.branch = params[1].trim();
-        this.username = params[2].trim();
+        this.username = URLEncoder.encode(params[2].trim());
         this.password = URLEncoder.encode(params[3].trim());
         this.pipeline = params[4].trim();
     }

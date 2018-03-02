@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static java.util.Objects.isNull;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 public class DevOpsService {
@@ -26,13 +26,13 @@ public class DevOpsService {
 
     public boolean trigger(Git git) {
         String latestHash = gitService.getLatestHash(git);
-        if (isEmpty(latestHash)) {
+        if (isBlank(latestHash)) {
             XxlJobLogger.log("[ERROR] {0}, could not get latest commit hash, git server may not available.", git.getUrlBranch());
             return false;
         }
 
         GitCommit savedGitCommit = gitCommitRepository.findOne(git.getUrlBranch());
-        if (isNull(savedGitCommit) || isEmpty(savedGitCommit.getLatestHash())) {
+        if (isNull(savedGitCommit) || isBlank(savedGitCommit.getLatestHash())) {
             XxlJobLogger.log("[INFO] {0} latest commit hash not found, will trigger next time.", git.getUrlBranch());
             gitCommitRepository.save(new GitCommit(git.getUrlBranch(), latestHash));
             return true;
