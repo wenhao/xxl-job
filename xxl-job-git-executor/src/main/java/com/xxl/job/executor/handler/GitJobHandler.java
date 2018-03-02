@@ -1,10 +1,11 @@
-package com.xxl.job.executor.service;
+package com.xxl.job.executor.handler;
 
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.executor.domain.Git;
+import com.xxl.job.executor.service.DevOpsService;
 import com.xxl.job.executor.validator.ParameterValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -10,7 +10,7 @@ public class PipelineService {
     }
 
     public boolean runPipeline(String pipeline) {
-        return false;
+        return true;
     }
 
 }
