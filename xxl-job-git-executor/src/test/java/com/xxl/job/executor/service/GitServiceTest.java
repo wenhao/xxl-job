@@ -20,7 +20,7 @@ public class GitServiceTest {
     @Ignore
     public void should_get_latest_git_repository_hash() {
         // given
-        Git git = new Git("https://github.com/wenhao/xxl-job.git,master,test,testpwd,pl000001");
+        Git git = new Git("https://github.com/wenhao/xxl-job.git,master,wenhao@126.com,1qaz!QAZ,pl000001");
 
         // when
         String latestHash = gitService.getLatestHash(git);

@@ -2,13 +2,19 @@ package com.xxl.job.executor.service;
 
 import com.xxl.job.core.log.XxlJobLogger;
 import com.xxl.job.executor.domain.Git;
-import org.apache.commons.exec.*;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.Executor;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 @Service
 public class GitService {
@@ -23,16 +29,18 @@ public class GitService {
 
         CommandLine commandLine = CommandLine.parse(command);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream);
+        ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+        PumpStreamHandler pumpStreamHandler = new PumpStreamHandler(outputStream, errorOutputStream);
         ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
         Executor executor = new DefaultExecutor();
         executor.setExitValue(0);
         executor.setWatchdog(watchdog);
         executor.setStreamHandler(pumpStreamHandler);
         try {
+            XxlJobLogger.log("[INFO] Execute command: {0}", command);
             executor.execute(commandLine);
         } catch (IOException e) {
-            XxlJobLogger.log("[ERROR] {0}, could not get latest commit hash, git server isn't available.", git.getUrlBranch());
+            XxlJobLogger.log(errorOutputStream.toString());
             XxlJobLogger.log(e);
             return EMPTY;
         }
