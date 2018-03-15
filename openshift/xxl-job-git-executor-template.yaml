@@ -10,20 +10,20 @@ metadata:
     description: "xxl-job-git-executor"
     tags: "xxl-job-git-executor,xxl-job,executor"
     iconClass: "fa fa-cogs"
-message: "The following service(s) have been created in your project: \n\n    xxl-job-git-executor: ${SERVICE_NAME}\n\n"
+message: "The following service(s) have been created in your project: \n\n    xxl-job-git-executor: ${NAME}\n\n"
 labels:
   template: "xxl-job-git-executor"
 objects:
   - kind: DeploymentConfig
     apiVersion: "v1"
     metadata:
-      name: "${SERVICE_NAME}-xxl-job-git-executor"
+      name: "${NAME}-xxl-job-git-executor"
       labels:
-        app: "${SERVICE_NAME}-xxl-job-git-executor"
+        app: "${NAME}-xxl-job-git-executor"
     spec:
       replicas: 1
       selector:
-        app: "${SERVICE_NAME}-xxl-job-git-executor"
+        app: "${NAME}-xxl-job-git-executor"
       strategy:
         type: "Recreate"
       triggers:
@@ -40,7 +40,7 @@ objects:
       template:
         metadata:
           labels:
-            app: "${SERVICE_NAME}-xxl-job-git-executor"
+            app: "${NAME}-xxl-job-git-executor"
         spec:
           containers:
             - name: "xxl-job-git-executor"
@@ -53,10 +53,10 @@ objects:
                   value: "${XXL_JOB_EXECUTOR_APPNAME}"
                 - name: XXL_JOB_EXECUTOR_PORT
                   value: "${XXL_JOB_EXECUTOR_PORT}"
-                - name: REDIS_MASTER_HOST
-                  value: "${REDIS_MASTER_HOST}"
                 - name: REDIS_SENTINEL_HOST
                   value: "${REDIS_SENTINEL_HOST}"
+                - name: REDIS_SENTINEL_PORT
+                  value: "${REDIS_SENTINEL_PORT}"
               resources:
                 requests:
                   memory: "512Mi"
@@ -70,13 +70,13 @@ objects:
   - kind: HorizontalPodAutoscaler
     apiVersion: "autoscaling/v1"
     metadata:
-      name: "${SERVICE_NAME}-xxl-job-git-executor"
+      name: "${NAME}-xxl-job-git-executor"
       labels:
-        app: "${SERVICE_NAME}-xxl-job-git-executor"
+        app: "${NAME}-xxl-job-git-executor"
     spec:
       scaleTargetRef:
         kind: "DeploymentConfig"
-        name: "${SERVICE_NAME}-xxl-job-git-executor"
+        name: "${NAME}-xxl-job-git-executor"
         apiVersion: "extensions/v1beta1"
         subresource: scale
       minReplicas: 2
@@ -88,7 +88,7 @@ parameters:
     displayName: Namespace
     description: "The OpenShift Namespace where the ImageStream resides."
     value: openshift
-  - name: SERVICE_NAME
+  - name: NAME
     displayName: "Service Name of xxl-job-git-executor"
     description: "The name of the OpenShift Service exposed for the xxl-job-admin, pre-set a suffix '-xxl-job-git-executor'."
     generate: expression
@@ -124,13 +124,13 @@ parameters:
     description: "Port of xxl-job executor."
     value: "9999"
     required: true
-  - name: REDIS_MASTER_HOST
+  - name: REDIS_SENTINEL_HOST
     displayName: "Host of Redis cluster"
     description: "Host of Redis cluster."
     value: "localhost"
     required: true
-  - name: REDIS_SENTINEL_HOST
-    displayName: "Host of Redis sentinel"
-    description: "Host of Redis sentinel."
-    value: "localhost"
+  - name: REDIS_SENTINEL_PORT
+    displayName: "Port of Redis sentinel"
+    description: "Port of Redis sentinel."
+    value: "26379"
     required: true
